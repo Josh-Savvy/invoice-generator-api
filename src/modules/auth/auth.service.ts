@@ -18,9 +18,22 @@ export class AuthService {
   ) {}
 
   async signin(input: SignInDto) {
-    const access_token = this.jwtService.sign({ sub: Date.now() });
-    const user = input;
-    return { user, access_token };
+    // Todo: implement caching strategy
+    try {
+      const user = await this.userService.findByEmail(input.email);
+      if (!user) throw new BadRequestException('Invalid Credentials');
+      if (!helpers().password.isValidPassword(user.password, input.password))
+        throw new BadRequestException('Invalid Credentials');
+      const access_token = this.jwtService.sign({
+        sub: user.id,
+        email: user.email,
+      });
+      return { user, access_token };
+    } catch (error) {
+      this.logger.error(error);
+      this.logger.error('Error logging in:', JSON.stringify(error));
+      throw new UnprocessableEntityException('Something went wrong');
+    }
   }
 
   async signup(input: SignUpDto) {

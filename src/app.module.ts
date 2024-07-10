@@ -12,13 +12,13 @@ import { Invoice } from './modules/invoice/entities/invoice.entity';
 import { Auth } from './modules/auth/entities/auth.entity';
 import Business from './modules/user/entities/business.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtConfig } from './config/jwt.config';
+import jwtConfig, { JwtConfig } from './config/jwt.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      cache: true,
       isGlobal: true,
-      load: [databaseConfig],
+      cache: true,
+      load: [databaseConfig, jwtConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -38,10 +38,10 @@ import { JwtConfig } from './config/jwt.config';
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
-      useFactory: (config: ConfigService<JwtConfig>) => ({
-        global: true,
-        secret: config.get('secret'),
-      }),
+      useFactory: (config: ConfigService<JwtConfig>) => {
+        const secret = config.get('secret');
+        return { global: true, secret };
+      },
     }),
     UserModule,
     AuthModule,

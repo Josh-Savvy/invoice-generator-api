@@ -26,6 +26,17 @@ export class UserService {
       where: { email },
       ...options,
     });
+    return user;
+  }
+
+  async findByEmailAndThrowError(
+    email: string,
+    options?: FindOneOptions<User>,
+  ) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      ...options,
+    });
     if (!user) throw new BadRequestException('User does not exist');
     return user;
   }
