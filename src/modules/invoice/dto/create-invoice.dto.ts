@@ -1,14 +1,11 @@
 import * as Joi from 'joi';
 import CreateClientDTO from './create-client.dto';
-import {
-  BadRequestException,
-  PipeTransform,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   clientObjectSchema,
   futureDateSchema,
 } from 'src/lib/validation/schema';
+import ValidationPipe from 'src/lib/validation/validation.pipe';
 
 export class CreateInvoiceDto {
   description: string;
@@ -25,15 +22,9 @@ const createInvoiceSchema = Joi.object<CreateInvoiceDto>({
   client: clientObjectSchema.required(),
 }).options({ abortEarly: false });
 
-export class CreateInvoiceValidationPipe implements PipeTransform {
-  public transform(value: CreateInvoiceDto): CreateInvoiceDto {
-    const result = createInvoiceSchema.validate(value);
-    if (result.error) {
-      const errorMessage = result.error.details[0]?.message;
-      if (!errorMessage)
-        throw new UnprocessableEntityException('Something went wrong');
-      throw new BadRequestException(errorMessage.split('"').join(''));
-    }
-    return value;
+@Injectable()
+export class CreateInvoiceValidationPipe extends ValidationPipe {
+  constructor() {
+    super(createInvoiceSchema);
   }
 }

@@ -11,6 +11,8 @@ import { User } from './modules/user/entities/user.entity';
 import { Invoice } from './modules/invoice/entities/invoice.entity';
 import { Auth } from './modules/auth/entities/auth.entity';
 import Business from './modules/user/entities/business.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtConfig } from './config/jwt.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,6 +33,14 @@ import Business from './modules/user/entities/business.entity';
         entities: [User, Invoice, Auth, Business],
         synchronize: true,
         // logging: true,
+      }),
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<JwtConfig>) => ({
+        global: true,
+        secret: config.get('secret'),
       }),
     }),
     UserModule,

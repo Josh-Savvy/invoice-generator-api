@@ -5,16 +5,22 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { UserService } from '../user/services/user.service';
-import { SignUpDto } from './dto/sign-up.dto';
+import { SignUpDto, SignInDto } from './dto/sign-up.dto';
 import helpers from 'src/helpers';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async signin() {
-    return {};
+  async signin(input: SignInDto) {
+    const access_token = this.jwtService.sign({ sub: Date.now() });
+    const user = input;
+    return { user, access_token };
   }
 
   async signup(input: SignUpDto) {
