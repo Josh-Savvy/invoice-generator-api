@@ -8,9 +8,9 @@ import { InvoiceModule } from './modules/invoice/invoice.module';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/entities/user.entity';
-import Client from './modules/user/entities/client.entity';
 import { Invoice } from './modules/invoice/entities/invoice.entity';
 import { Auth } from './modules/auth/entities/auth.entity';
+import Business from './modules/user/entities/business.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,7 +28,7 @@ import { Auth } from './modules/auth/entities/auth.entity';
         username: configService.get('user'),
         password: configService.get('password'),
         database: configService.get('database'),
-        entities: [User, Client, Invoice, Auth],
+        entities: [User, Invoice, Auth, Business],
         synchronize: true,
         // logging: true,
       }),
