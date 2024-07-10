@@ -28,6 +28,7 @@ export class AuthService {
         sub: user.id,
         email: user.email,
       });
+      delete user.password;
       return { user, access_token };
     } catch (error) {
       this.logger.error(error);
