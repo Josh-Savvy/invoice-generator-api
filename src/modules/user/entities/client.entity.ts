@@ -1,4 +1,6 @@
 export default class Client {
+  avatar: string;
+
   last_name: string;
 
   first_name: string;

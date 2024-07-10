@@ -25,10 +25,13 @@ export class User {
   @Column()
   password!: string;
 
-  @Column({ nullable: true, unique: true })
-  email?: string;
+  @Column({ unique: true })
+  email: string;
 
-  @Column({ nullable: true, type: 'date' })
+  @Column({ nullable: true })
+  avatar?: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
   last_login_at?: Date;
 
   @OneToMany(() => Invoice, (invoices) => invoices.created_by)
@@ -41,9 +44,9 @@ export class User {
   @Column({ nullable: true })
   business_id!: number;
 
-  @CreateDateColumn({ type: 'time with time zone' })
+  @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;
 
-  @UpdateDateColumn({ type: 'time with time zone' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { SignUpDto, signupSchema } from 'src/modules/auth/dto/sign-up.dto';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class UserService {
@@ -67,7 +68,10 @@ export class UserService {
     try {
       let user = this.userRepository.create({ ...input });
       // Todo: Save
-      user = await this.userRepository.save({ ...input });
+      user = await this.userRepository.save({
+        ...input,
+        avatar: faker.image.avatar(),
+      });
       delete user.password;
       this.logger.log('User created successfully', { ...input });
       return user;

@@ -24,16 +24,13 @@ export class AuthService {
     // Todo: implement caching strategy
     try {
       const user = await this.userService.findByEmail(input.email, {
-        relations: ['business', 'invoices'],
+        relations: ['business'],
       });
       if (!user) throw new BadRequestException('Invalid Credentials');
-      if (!helpers().password.isValidPassword(user.password, input.password))
+      if (!helpers.password.isValidPassword(user.password, input.password))
         throw new BadRequestException('Invalid Credentials');
       const access_token = this.jwtService.sign(
-        {
-          sub: user.id,
-          email: user.email,
-        },
+        { sub: user.id, email: user.email },
         { secret: this.configService.get('secret') },
       );
       await this.userService.updateLastLogin(user);
@@ -49,7 +46,7 @@ export class AuthService {
 
   async signup(input: SignUpDto) {
     try {
-      input.password = await helpers().password.encryptPassword(input.password);
+      input.password = await helpers.password.encryptPassword(input.password);
       return await this.userService.create(input);
     } catch (error) {
       const stack = new Error();
@@ -60,10 +57,5 @@ export class AuthService {
         );
       throw new UnprocessableEntityException('Something went wrong');
     }
-  }
-
-  async profile(userId: number) {
-    // return await this.userService.
-    return userId;
   }
 }
