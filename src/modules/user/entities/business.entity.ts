@@ -2,13 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Invoice } from 'src/modules/invoice/entities/invoice.entity';
 
 @Entity('businesses')
 export default class Business {
@@ -25,10 +24,11 @@ export default class Business {
   is_verified!: boolean;
 
   @OneToOne(() => User, (user) => user.business)
+  @JoinColumn({ name: 'owner_id' })
   owner!: User;
 
-  @OneToMany(() => Invoice, (invoices) => invoices.created_by)
-  invoices!: Invoice[];
+  @Column()
+  owner_id!: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at!: Date;

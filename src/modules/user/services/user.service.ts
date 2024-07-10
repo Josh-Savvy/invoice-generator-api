@@ -39,10 +39,14 @@ export class UserService {
   // }
 
   async updateLastLogin(user: User) {
-    if (!user) throw new BadRequestException('User not provided');
-    return await this.userRepository.update(user, {
-      last_login_at: new Date(),
-    });
+    try {
+      if (!user) throw new BadRequestException('User not provided');
+      return await this.userRepository.update(user.id, {
+        last_login_at: new Date(),
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findByEmailAndThrowError(

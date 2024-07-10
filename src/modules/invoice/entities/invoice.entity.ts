@@ -27,7 +27,11 @@ export class Invoice {
   @Column({ length: 100 })
   reference!: string;
 
-  @ManyToOne(() => User, (user) => user.invoices)
+  @ManyToOne(() => User, (user) => user.invoices, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'created_by_id' })
   created_by!: User;
 

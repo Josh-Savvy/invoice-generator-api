@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   SignUpDto,
@@ -6,6 +14,8 @@ import {
   SigninValidationPipe,
   SignInDto,
 } from './dto/sign-up.dto';
+import { AuthGuard, type JwtUser } from './guards/auth.guard';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -22,8 +32,11 @@ export class AuthController {
     return await this.authService.signup(input);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  async profile() {
-    return await this.authService.profile();
+  async profile(@Req() req: Request & { user: JwtUser }) {
+    const user = req?.user;
+    console.log({ user, date: Date.now() });
+    return await this.authService.profile(user.id);
   }
 }

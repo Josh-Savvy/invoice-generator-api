@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -34,7 +35,11 @@ export class User {
   invoices!: Invoice[];
 
   @OneToOne(() => Business, (b) => b.owner)
+  @JoinColumn({ name: 'business_id' })
   business!: Business;
+
+  @Column({ nullable: true })
+  business_id!: number;
 
   @CreateDateColumn({ type: 'time with time zone' })
   created_at!: Date;

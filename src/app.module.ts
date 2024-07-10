@@ -40,7 +40,11 @@ import jwtConfig, { JwtConfig } from './config/jwt.config';
       inject: [ConfigService],
       useFactory: (config: ConfigService<JwtConfig>) => {
         const secret = config.get('secret');
-        return { global: true, secret };
+        return {
+          global: true,
+          secret,
+          signOptions: { expiresIn: 86400 },
+        };
       },
     }),
     UserModule,
