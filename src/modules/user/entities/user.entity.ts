@@ -27,6 +27,9 @@ export class User {
   @Column({ nullable: true, unique: true })
   email?: string;
 
+  @Column({ nullable: true, type: 'date' })
+  last_login_at?: Date;
+
   @OneToMany(() => Invoice, (invoices) => invoices.created_by)
   invoices!: Invoice[];
 

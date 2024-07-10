@@ -29,6 +29,22 @@ export class UserService {
     return user;
   }
 
+  // async updateUser(userId: number, input: Partial<User>) {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //     ...options,
+  //   });
+  //   if (!user) throw new BadRequestException('User does not exist');
+  //   return await this.userRepository.update(user, { ...input });
+  // }
+
+  async updateLastLogin(user: User) {
+    if (!user) throw new BadRequestException('User not provided');
+    return await this.userRepository.update(user, {
+      last_login_at: new Date(),
+    });
+  }
+
   async findByEmailAndThrowError(
     email: string,
     options?: FindOneOptions<User>,

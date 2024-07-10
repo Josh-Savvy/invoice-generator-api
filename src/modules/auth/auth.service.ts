@@ -28,7 +28,9 @@ export class AuthService {
         sub: user.id,
         email: user.email,
       });
+      await this.userService.updateLastLogin(user);
       delete user.password;
+      user.last_login_at = new Date();
       return { user, access_token };
     } catch (error) {
       this.logger.error(error);
