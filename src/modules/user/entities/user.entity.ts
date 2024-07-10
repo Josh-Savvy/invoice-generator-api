@@ -21,7 +21,10 @@ export class User {
   @Column()
   last_name!: string;
 
-  @Column({ nullable: true })
+  @Column()
+  password!: string;
+
+  @Column({ nullable: true, unique: true })
   email?: string;
 
   @OneToMany(() => Invoice, (invoices) => invoices.created_by)

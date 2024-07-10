@@ -22,7 +22,7 @@ export default class InvoiceService {
 
   async create(userId: number, input: CreateInvoiceDto) {
     if (isNaN(userId)) throw new BadRequestException('Invalid userId');
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findByIdAndThrowError(userId);
     try {
       const client = new Client({ ...input.client, isUser: false });
       // Todo: check whether client is a user
